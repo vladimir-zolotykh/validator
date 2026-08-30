@@ -59,16 +59,13 @@ class SizedString(String, MaxSized):
 
 
 class Member(Validator):
-    def __init__(self, **kwargs):
-        _kwargs = dict(kwargs)
-        if 'size' in _kwargs:
-            del _kwargs['size']
-        super().__init__(_kwargs)
-        
-        self.members = list[_kwargs]
+    def __init__(self, *values):
+        self.members = values
+
     def validate(self, value):
         if value not in self.members:
-            raise ValueError(f"{value!} must be one of {self.members}")
+            raise ValueError(f"{value!r} must be one of {self.members}")
+
 
 class Unsigned(Validator):
     def validate(self, value):
@@ -85,7 +82,7 @@ class UnsignedFloat(Float, Unsigned):
 
 
 class Component:
-    name = SizedString(8)
+    name = SizedString(size=8)
     price = UnsignedFloat()
     shares = UnsignedInteger()
     color = Member("RED", "GREEN", "BLUE")
@@ -93,7 +90,9 @@ class Component:
 
 if __name__ == "__main__":
     component = Component()
-    component.name = 'Apple'
+    component.name = "Apple"
     component.price = 123.5
     component.shares = 193
-    component.color = 'RED'
+    component.color = "RED"
+    c = component
+    print(c.name, c.price, c.shares, c.color)
