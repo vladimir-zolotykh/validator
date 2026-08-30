@@ -55,7 +55,7 @@ class String(Typed):
 class SizedString(String, MaxSized):
     def validate(self, value):
         if len(value) < 1 or len(value) > self.size:
-            raise ValueError(f"{value} must be in lenght {self.size} or less")
+            raise ValueError(f"{value} must be of lenght {self.size} or less")
 
 
 class Member(Validator):
@@ -93,3 +93,7 @@ class Component:
 
 if __name__ == "__main__":
     component = Component()
+    component.name = 'Apple'
+    component.price = 123.5
+    component.shares = 193
+    component.color = 'RED'
