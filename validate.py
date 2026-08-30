@@ -5,9 +5,9 @@ from abc import ABC, abstractmethod
 
 
 class Validator(ABC):
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    # def __init__(self, **kwargs)
+    #     for k, v in kwargs.items():
+    #         setattr(self, k, v)
 
     def __set_name__(self, owner, name):
         self.sys_name = f"sys_{name}"
@@ -42,10 +42,15 @@ class Float(Typed):
 
 
 class MaxSized(Validator):
-    def __init__(self, **kwargs):
-        if "size" not in kwargs:
-            raise TypeError("Must set size")
-        super().__init__(**kwargs)
+    def __init__(self, size=8):
+        if size < 1:
+            raise TypeError(f"{size} must be 1 or above")
+        self.size = size
+
+    # def __init__(self, **kwargs):
+    #     if "size" not in kwargs:
+    #         raise TypeError("Must set size")
+    #     super().__init__(**kwargs)
 
 
 class String(Typed):
