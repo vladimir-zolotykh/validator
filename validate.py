@@ -71,7 +71,9 @@ class Unsigned(Validator):
 
 
 class UnsignedInteger(Integer, Unsigned):
-    pass
+    def validate(self, value):
+        super().validate(value)
+        super(Typed, self).validate(value)
 
 
 class UnsignedFloat(Float, Unsigned):
