@@ -50,8 +50,9 @@ class String(Typed):
 
 class SizedString(String, MaxSized):
     def validate(self, value):
+        super().validate(value)
         if len(value) < 1 or len(value) > self.size:
-            raise ValueError(f"{value} must be of lenght {self.size} or less")
+            raise ValueError(f"{value} must be of length {self.size} or less")
 
 
 class Member(Validator):
@@ -74,7 +75,9 @@ class UnsignedInteger(Integer, Unsigned):
 
 
 class UnsignedFloat(Float, Unsigned):
-    pass
+    def validate(self, value):
+        super().validate(value)
+        super(Typed, self).validate(value)
 
 
 class Component:
