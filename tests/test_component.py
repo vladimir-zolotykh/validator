@@ -1,3 +1,4 @@
+import re
 import pytest
 from validate import Component
 
@@ -31,3 +32,13 @@ def test_shares():
         c.shares = "cheap"
     with pytest.raises(ValueError, match="-10: must be >0"):
         c.shares = -10
+
+
+def test_color():
+    c = Component()
+    c.color = "RED"
+    assert c.color == "RED"
+    with pytest.raises(
+        ValueError, match=re.escape("10 must be one of ('RED', 'GREEN', 'BLUE')")
+    ):
+        c.color = 10
