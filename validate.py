@@ -32,23 +32,28 @@ class Typed(Validator):
 class Integer(Typed):
     expected_type = int
 
+    def validate(self, value):
+        super().validate(value)
+
 
 class Float(Typed):
     expected_type = float
 
-
-class MaxSized(Validator):
-    def __init__(self, size=8):
-        if size < 1:
-            raise TypeError(f"{size} must be 1 or above")
-        self.size = size
+    def validate(self, value):
+        super().validate(value)
 
 
 class String(Typed):
     expected_type = str
 
+    def validate(self, value):
+        super().validate(value)
 
-class SizedString(String, MaxSized):
+
+class SizedString(String):
+    def __init__(self, size=8):
+        self.size = size
+
     def validate(self, value):
         super().validate(value)
         if len(value) < 1 or len(value) > self.size:
@@ -66,24 +71,23 @@ class Member(Validator):
 
 class Unsigned(Validator):
     def validate(self, value):
+        super().validate(value)
         if value < 0:
             raise ValueError(f"{value}: must be >0")
 
 
-class UnsignedInteger(Integer, Unsigned):
+class UnsignedInteger(Unsigned, Integer):
     def validate(self, value):
         super().validate(value)
-        super(Typed, self).validate(value)
 
 
-class UnsignedFloat(Float, Unsigned):
+class UnsignedFloat(Unsigned, Float):
     def validate(self, value):
         super().validate(value)
-        super(Typed, self).validate(value)
 
 
 class Component:
-    name = SizedString(size=8)
+    name = SizedString(8)
     price = UnsignedFloat()
     shares = UnsignedInteger()
     color = Member("RED", "GREEN", "BLUE")
