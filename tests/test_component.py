@@ -21,3 +21,13 @@ def test_price():
         c.price = "too much"
     with pytest.raises(ValueError, match="-10.0: must be >0"):
         c.price = -10.0
+
+
+def test_shares():
+    c = Component()
+    c.shares = 193
+    assert c.shares == 193
+    with pytest.raises(TypeError, match="'cheap': expected <class 'int'>"):
+        c.shares = "cheap"
+    with pytest.raises(ValueError, match="-10: must be >0"):
+        c.shares = -10
