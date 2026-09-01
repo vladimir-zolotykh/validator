@@ -4,8 +4,29 @@
 from abc import ABC, abstractmethod
 from functools import wraps
 
+ENABLE_TRACK = 1
+
+
+def track(func):
+    if not ENABLE_TRACK:
+        return func
+    name = func.__qualname__
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        val = args[1]
+        print(f"{name}({val})")
+        res = func(*args, **kwargs)
+        return res
+
+    return wrapper
+
 
 class Validator(ABC):
+    def __init_subclass__(cls):
+        if hasattr(cls, "validate"):
+            setattr(cls, "validate", track(getattr(cls, "validate")))
+
     def __set_name__(self, owner, name):
         self.sys_name = f"sys_{name}"
         self.usr_name = f"usr_{name}"
@@ -87,32 +108,6 @@ class UnsignedFloat(Unsigned, Float):
         super().validate(value)
 
 
-ENABLE_TRACK = 1
-
-
-def track(func):
-    if not ENABLE_TRACK:
-        return func
-    name = func.__qualname__
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        val = args[1]
-        print(f"{name}({val})")
-        res = func(*args, **kwargs)
-        return res
-
-    return wrapper
-
-
-def track_validate(cls):
-    for cls in cls.__subclasses__():
-        if "validate" in cls.__dict__:
-            setattr(cls, "validate", track(cls.__dict__["validate"]))
-        track_validate(cls)
-    return cls
-
-
 class Component:
     name = SizedString(8)
     price = UnsignedFloat()
@@ -121,7 +116,7 @@ class Component:
 
 
 if __name__ == "__main__":
-    track_validate(Validator)
+    # track_validate(Validator)
     component = Component()
     component.name = "Apple"
     component.price = 123.5
