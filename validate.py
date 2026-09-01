@@ -99,13 +99,11 @@ class Unsigned(Validator):
 
 
 class UnsignedInteger(Unsigned, Integer):
-    def validate(self, value):
-        super().validate(value)
+    pass
 
 
 class UnsignedFloat(Unsigned, Float):
-    def validate(self, value):
-        super().validate(value)
+    pass
 
 
 class Component:
