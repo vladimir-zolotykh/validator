@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
+from functools import wraps
 
 
 class Validator(ABC):
@@ -86,6 +87,32 @@ class UnsignedFloat(Unsigned, Float):
         super().validate(value)
 
 
+ENABLE_TRACK = 1
+
+
+def track(func):
+    if not ENABLE_TRACK:
+        return func
+    name = func.__qualname__
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        val = args[1]
+        print(f"{name}({val})")
+        res = func(*args, **kwargs)
+        return res
+
+    return wrapper
+
+
+def track_validate(cls):
+    for cls in cls.__subclasses__():
+        if "validate" in cls.__dict__:
+            setattr(cls, "validate", track(cls.__dict__["validate"]))
+        track_validate(cls)
+    return cls
+
+
 class Component:
     name = SizedString(8)
     price = UnsignedFloat()
@@ -94,6 +121,7 @@ class Component:
 
 
 if __name__ == "__main__":
+    track_validate(Validator)
     component = Component()
     component.name = "Apple"
     component.price = 123.5
