@@ -22,7 +22,9 @@ class Symbol:
 
 
 if __name__ == "__main__":
-    NAME = Symbol("NAME", r"[A-Za-z_]\w+")
-    print(NAME)
-    NUM = Symbol("NUM", r"\d+")
-    print(NUM)
+    Symbol("NAME", r"[A-Za-z_]\w+")
+    Symbol("NUM", r"\d+")
+    NUM1 = Symbol("NUM")
+    NUM2 = Symbol("NUM")
+    print(NUM1)
+    assert NUM1 is NUM2
