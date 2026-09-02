@@ -24,8 +24,8 @@ def track(func):
 
 class Validator(ABC):
     def __init_subclass__(cls):
-        if hasattr(cls, "validate"):
-            setattr(cls, "validate", track(getattr(cls, "validate")))
+        if validate := getattr(cls, "validate", None):
+            setattr(cls, "validate", track(validate))
 
     def __set_name__(self, owner, name):
         self.sys_name = f"sys_{name}"
@@ -87,6 +87,7 @@ class Member(Validator):
         self.members = values
 
     def validate(self, value):
+        super().validate(value)
         if value not in self.members:
             raise ValueError(f"{value!r} must be one of {self.members}")
 
@@ -99,11 +100,13 @@ class Unsigned(Validator):
 
 
 class UnsignedInteger(Unsigned, Integer):
-    pass
+    def validate(self, value):
+        super().validate(value)
 
 
 class UnsignedFloat(Unsigned, Float):
-    pass
+    def validate(self, value):
+        super().validate(value)
 
 
 class Component:
@@ -114,7 +117,6 @@ class Component:
 
 
 if __name__ == "__main__":
-    # track_validate(Validator)
     component = Component()
     component.name = "Apple"
     component.price = 123.5
