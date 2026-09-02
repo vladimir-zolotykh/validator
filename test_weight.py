@@ -24,7 +24,7 @@ def track(func):
 class Validator:
     def __init_subclass__(cls):
         if validate := getattr(cls, "validate", None):
-            setattr(cls, "validate", validate)
+            setattr(cls, "validate", track(validate))
 
     def __set_name__(self, owner, name):
         self.sys_name = f"sys_{name}"
