@@ -24,7 +24,8 @@ class Symbol:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, type(self)):
-            return self.name == other.name and self.pat == other.pat
+            # There is no two Symbols with name NAME and different PAT
+            return self.name == other.name
         elif isinstance(other, str):
             return self.name == other
         else:
@@ -35,6 +36,15 @@ class Symbol:
         return "|".join(
             f"(?P<{name}>{sym.pat})" for name, sym in cls._instances.items()
         )
+
+
+def test_symbol_eq():
+    Symbol._instances.clear()
+    name = Symbol("NAME", r"[A-Za-z_]\w+")
+    num = Symbol("NUM", r"\d+")
+    assert name == Symbol("NAME")
+    assert name == "NAME"
+    assert name != num
 
 
 def test_masterpat():
