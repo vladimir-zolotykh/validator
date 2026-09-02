@@ -8,6 +8,7 @@ class Symbol:
     _instances = {}
 
     def __new__(cls, name: str, pat: str = ""):
+        # if name not in type(cls)._instances:
         if name not in Symbol._instances:
             sym = super().__new__(cls)
             sym.name = name
@@ -32,8 +33,15 @@ class Symbol:
     @classmethod
     def materpat(cls) -> str:
         return "|".join(
-            f"(?P<{name}>){sym.pat}" for name, sym in cls._instances.items()
+            f"(?P<{name}>{sym.pat})" for name, sym in cls._instances.items()
         )
+
+
+def test_masterpat():
+    Symbol._instances.clear()
+    Symbol("NAME", r"[A-Za-z_]\w+")
+    Symbol("NUM", r"\d+")
+    assert Symbol.materpat() == r"(?P<NAME>[A-Za-z_]\w+)|(?P<NUM>\d+)"
 
 
 @pytest.mark.parametrize(
