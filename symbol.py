@@ -21,6 +21,20 @@ class Symbol:
     def __repr__(self):
         return f"Symbol({self.name}, {self.pat})"
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, type(self)):
+            return self.name == other.name and self.pat == other.pat
+        elif isinstance(other, str):
+            return self.name == other
+        else:
+            return NotImplemented
+
+    @classmethod
+    def materpat(cls) -> str:
+        return "|".join(
+            f"(?P<{name}>){sym.pat}" for name, sym in cls._instances.items()
+        )
+
 
 @pytest.mark.parametrize(
     "name, pat",
