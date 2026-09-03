@@ -8,9 +8,10 @@ class SymbolMeta(type):
     _symbols = {}
 
     def __call__(cls, name, pat=""):
-        if name not in SymbolMeta._symbols:
-            SymbolMeta._symbols[name] = super().__call__(name, pat)
-        return SymbolMeta._symbols[name]
+        symbols = type(cls)._symbols
+        if name not in symbols:
+            symbols[name] = super().__call__(name, pat)
+        return symbols[name]
 
 
 class Symbol(metaclass=SymbolMeta):
