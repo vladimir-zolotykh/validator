@@ -35,6 +35,13 @@ class Symbol(metaclass=SymbolMeta):
         return f"Symbol({self.name}, {self.pat})"
 
 
+def test_symbol_eq():
+    SymbolMeta._symbols.clear()
+    name = Symbol("NAME", r"[A-Za-z_]\w*")
+    assert name == "NAME"
+    assert name == Symbol("NAME")
+
+
 def test_masterpat():
     SymbolMeta._symbols.clear()
     Symbol("NAME", r"[A-Za-z_]\w*")
