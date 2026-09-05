@@ -51,7 +51,6 @@ def test_symbol_eq(symbols):
 
 
 def test_masterpat(symbols):
-    name, num = symbols
     assert SymbolMeta.masterpat() == "(?P<NAME>[A-Za-z_]\\w*)|(?P<NUM>\\d+)"
 
 
